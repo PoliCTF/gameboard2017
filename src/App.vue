@@ -34,23 +34,16 @@
             <span aria-hidden="true">&times;</span>
           </button>
       </div>
-      <form v-if="logged_in" v-on:submit.prevent="submitFlag(flag)" class="form-inline" autocomplete="off">
-        <div class="input-group">
-          <input class="form-control" name="flag" v-model="flag" type="text" placeholder="Flag">
-          <span class="input-group-btn">  
-          <input type="submit" class="btn  btn-secondary"></input>  
-          </span>
-        </div>
-      </form>
       <section id="main-content">
           <div v-if="logged_in">
-            <!-- transition name="slide-fade" -->
+            <transition name="slide-fade" mode="out-in">
               <router-view 
                 :challenges="challenges"
                 :leaderboard="leaderboard"
                 :team="team"
+                :warnings="warnings"
                 ></router-view>
-            <!-- /transition -->
+            </transition>
           </div>
           <div v-else>
             <Login v-on:submit="onLoginSubmitted" />
@@ -75,6 +68,9 @@
 <script>
   import Api from './api'
   import Login from './components/Login'
+  import Bus from '@/Bus'
+
+
 
   export default {
     name: 'app',
@@ -87,6 +83,7 @@
       if(window.localStorage.getItem('loggedin')){
         this.logged_in = true
       }
+      Bus.$on('submitflag', this.submitFlag)
     },
 
     watch: {
@@ -159,6 +156,7 @@
       submitFlag(flag){
         if(!flag){
           this.error = "Please insert a flag"
+          return;
         }
         Api
           .submitFlag(flag)
@@ -203,15 +201,14 @@
   #main-content h1 {
     text-align: center;
   }
-/*
-  .slide-fade-enter-active {
-    transition: opacity .2s;
-    transition-delay: .2s;
+
+  .slide-fade-enter-active, .slide-fade-leave-active  {
+    transition: opacity .2s ease;;
   }
-  .slide-fade-leave-active {
-    transition: opacity .2s;
-  }
+
   .slide-fade-enter, .slide-fade-leave-to {
     opacity: 0;
-  } */
+  }
+
+  
 </style>

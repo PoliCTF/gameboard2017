@@ -1,23 +1,64 @@
 <template>
-  <div>
-    <h1>Challenges</h1>
-    <div id="challenges">
-          <div v-for="(challs,cat) in challengeList">
-            <h2>{{cat}}</h2>
-            <ul>
-                <li v-for="chall of challs">
-                    <router-link :to="{ name: 'Challenge', params: { id: chall.idchallenge }}">{{ chall.name }} - {{chall.points}} pts</router-link>
-                </li>
-            </ul>
-         </div>
+  <div class="container">
+    
+      <div class="row">
+        <div id="challenges" class="col-8">
+          <h2>My Cases <img src="../assets/investigationc.png" width="120px"> </h2>
+              <div v-for="(challs,cat) in challengeList" class="chall-list container">
+                <div class="row">
+                  <h2>{{cat}}</h2>
+                </div>
+                <div class="chall-cat row">
+                    <div v-for="chall of challs">
+                        <router-link :to="{ name: 'Challenge', params: { id: chall.idchallenge }}" class="challenge">
+                          {{ chall.name }} <br> {{chall.points}} pts
+                        </router-link>
+                    </div>
+                    <div v-for="chall of challs">
+                        <router-link :to="{ name: 'Challenge', params: { id: chall.idchallenge }}" class="challenge">
+                          {{ chall.name }} <br> {{chall.points}} pts
+                        </router-link>
+                    </div>
+                    <div v-for="chall of challs">
+                        <router-link :to="{ name: 'Challenge', params: { id: chall.idchallenge }}" class="challenge">
+                          {{ chall.name }} <br> {{chall.points}} pts
+                        </router-link>
+                    </div>
+                    <div v-for="chall of challs">
+                        <router-link :to="{ name: 'Challenge', params: { id: chall.idchallenge }}" class="challenge">
+                          {{ chall.name }} <br> {{chall.points}} pts
+                        </router-link>
+                    </div>
+                </div>
+            </div>
+        </div>
+      <div id="sidebar" class="col">
+        <h2>Solve a case!</h2>
+        <FlagForm />
+        <div class="warnings">
+          <h3>Secretary notes</h3>
+          <ul>
+            <li v-for="warning of warnings">{{warning}}</li>
+          </ul>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import FlagForm from './FlagForm'
 
 export default {
   name: 'Challenges',
+  components: {
+    FlagForm
+  },
+  data: function(){
+    return {
+      flag: null
+    }
+  },
   props: {
     challenges: {
       type: Array,
@@ -26,6 +67,10 @@ export default {
     team: {
       type: Object,
       default: {solves: {}}
+    },
+    warnings: {
+      type: Array,
+      default: []
     }
   },
   computed: {
@@ -51,4 +96,18 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.chall-list, .warnings {
+  margin-top: 2em;
+}
+.chall-list h2 {
+  text-transform: capitalize;
+}
+.challenge {
+  display: block;
+  padding: 1em;
+  border: 1px solid grey;
+  width: 12em;
+  margin-right: 0.2em;
+  margin-bottom: 0.3em;
+}
 </style>

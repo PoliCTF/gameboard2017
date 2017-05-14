@@ -1,6 +1,7 @@
 <template>
   <div class="conversation">
-    <div v-for="(line,i) of visible_lines">
+    <transition-group name="list">
+    <div v-for="(line,i) of visible_lines" v-bind:key="i">
       <p class="other" v-if="isString(line)">{{line}}</p>
       <div v-else-if="choices[i]">
         <p class="me text-primary">{{choices[i]}}</p>
@@ -12,6 +13,7 @@
         </p>
       </div>
     </div>
+    </transition-group>
   </div>
 </template>
 
@@ -69,8 +71,12 @@ export default {
 
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.subheader{text-align: center; margin-bottom: 2em}
-.chall-desc{text-align: center;}
+.list-enter-active, .list-leave-active {
+  transition: all 1s;
+}
+.list-enter, .list-leave-to /* .list-leave-active for <2.1.8 */ {
+  opacity: 0;
+  transform: translateY(30px);
+}
 </style>
