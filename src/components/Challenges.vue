@@ -2,7 +2,7 @@
   <div class="container">
     
       <div class="row">
-        <div id="challenges" class="col-8">
+        <div id="challenges" class="col-7">
           <h2>My Cases <img src="../assets/investigationc.png" width="120px"> </h2>
               <div v-for="(challs,cat) in challengeList" class="chall-list container">
                 <div class="row">
@@ -37,8 +37,21 @@
         <FlagForm />
         <div class="warnings">
           <h3>Secretary notes</h3>
-          <ul>
-            <li v-for="warning of warnings">{{warning}}</li>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>Message</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="warning of warnings">
+                <td>{{warning.time.toLocaleString()}}</td>
+                <td>{{warning.message}}</td>
+              </tr>
+            </tbody>
+          </table>
+
           </ul>
         </div>
       </div>

@@ -4,6 +4,7 @@ import qs from 'qs'
 
 axios.defaults.baseURL = baseurl
 
+
 export default {
   getCommonState () {
     return axios.all([
@@ -11,10 +12,16 @@ export default {
       axios.get('common/challenges')
     ]).then(axios.spread(function (status, challenges) {
       let state = {
-        warnings: status.data.globalwarnings,
         challenges: null,
         leaderboard: status.data.scores
       }
+
+      state.warnings = status.data.globalwarnings.map(function (warning) {
+        return {
+          message: warning.message,
+          time: new Date(warning.unixtime * 1000)
+        }
+      })
 
       state.challenges = status.data.status.map(challenge => {
         let details = challenges.data[challenge.idchallenge]
