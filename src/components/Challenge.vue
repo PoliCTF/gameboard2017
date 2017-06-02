@@ -6,7 +6,7 @@
     </div>
     <div v-if="challenge">
       <h1>{{challenge.name}}</h1>
-      <h3 class="subheader">{{challenge.category}} - {{challenge.points}}pts</h3>
+      <h3 class="subheader">{{challenge.category}} - {{challenge.points}}pts - {{solves}}</h3>
       <div class="contain">
         <div class="row">
           <div class="chall-desc col-6" >
@@ -45,6 +45,12 @@ export default {
     id: {
       type: Number,
       required: true
+    },
+    challenges: { 
+      //Array with all the challenges, this component will search it for the 
+      //challenge with the given id.
+      type: Array,
+      required: true
     }
   },
   created(){
@@ -53,11 +59,17 @@ export default {
   data() { return {
     challenge: null,
     error: null,
-     interrogating: false
+    interrogating: false
   }},
   watch: {
     id: function(){
       this.fetchData()
+    }
+  },
+  computed: {
+    solves: function(){
+      let chall = this.challenges.find(x => x.idchallenge == this.id)
+      return chall ? "" + chall.numsolved + " solves" : ""
     }
   },
   methods: {

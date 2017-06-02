@@ -70,9 +70,7 @@
   import Login from './components/Login'
   import Bus from '@/Bus'
 
-
-
-  export default {
+  let App = {
     name: 'app',
 
     components: {
@@ -176,7 +174,9 @@
       }
     }
 
-  }
+  } //end app
+
+  export default App;
 
 </script>
 
