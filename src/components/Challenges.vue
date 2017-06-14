@@ -3,7 +3,7 @@
     
       <div class="row">
         <div id="challenges" class="col-7">
-          <h2>My Cases <img src="../assets/investigationc.png" width="120px"> </h2>
+          <h2>My Cases <img src="../assets/investigationcw.png" width="90px"> </h2>
               <div v-for="(challs,cat) in challengeList" class="chall-list container">
                 <div class="row">
                   <h2>{{cat}}</h2>

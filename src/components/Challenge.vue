@@ -1,6 +1,6 @@
 <template>
   <div class="challenge-details">
-    <transition>
+    <transition name="fade">
     <div v-if="error" class="error">
       Error: {{error}}
     </div>
@@ -10,12 +10,11 @@
       <div class="contain">
         <div class="row">
           <div class="chall-desc col-6" >
-            <h2>Case Notes <img src="../assets/notesc.png" width="120px" /></h2>
+            <h2>Case Notes <img src="../assets/notescw.png" width="90px" /></h2>
             <div v-html="challenge.html"></div>
           </div>
           <div class="col-6 interrogations">
             <div v-if="interrogating">
-              <h2>Interrogating Guy</h2>
               <Conversation></Conversation> 
             </div>
             <div v-else>
@@ -59,7 +58,7 @@ export default {
   data() { return {
     challenge: null,
     error: null,
-    interrogating: false
+    interrogating: true
   }},
   watch: {
     id: function(){
@@ -68,17 +67,23 @@ export default {
   },
   computed: {
     solves: function(){
-      let chall = this.challenges.find(x => x.idchallenge == this.id)
-      return chall ? "" + chall.numsolved + " solves" : ""
+      return this.challenge ? "" + this.challenge.numsolved + " solves" : ""
     }
   },
   methods: {
     fetchData () {
+      let id = this.id
       Api
-        .getChallenge(this.id)
+        .getChallenge(id)
         .then(challenge => {
           this.error = null
+
+          // horrible horrible hack. We take the number of solves and points 
+          // from commonstatus
+          let challdata = this.challenges.find(x => x.idchallenge == id)
           this.challenge = challenge
+          this.challenge.numsolved = challdata.numsolved
+          this.challenge.points = challdata.points
         })
         .catch(e => {
           console.log(e)
@@ -95,8 +100,18 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.challenge-details { min-height: 600px;}
 .subheader{text-align: center; margin-bottom: 2em}
 .chall-desc{margin-bottom: 2em}
 .interrogations{text-align: center; min-height: 500px;}
 .image{width:80%}
+
+.fade-enter-active, .fade-leave-active  {
+    transition: opacity .2s ease;;
+  }
+
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
 </style>

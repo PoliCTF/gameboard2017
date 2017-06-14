@@ -1,10 +1,10 @@
 <template>
   <div id="app">
-    <nav class="navbar navbar-toggleable-md navbar-light" >
+    <nav class="navbar navbar-toggleable-md navbar-inverse bg-inverse" >
       <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <a class="navbar-brand" href="#">Polictf 2017</a>
+      <a class="navbar-brand" href="#"><span class="logo-draw">\&gt; </span><span class="logo-poli">poli</span><span class="logo-ctf">ctf</span></a>
 
       <div class="collapse navbar-collapse" id="mainNavbar">
         <ul class="navbar-nav mr-auto">
@@ -15,9 +15,11 @@
             <router-link to="/leaderboard" class="nav-link">Leaderboard</router-link>
           </li>
         </ul>
-        <div class="my-2 my-lg-0" v-if="team">
-          {{team.nome}} - {{team.totpoints}} pts - <a href="#" v-on:click="logout">logout</a> <a href="#" v-on:click="fetchData()"> - refresh</a>
-        </div>
+        <ul class="navbar-nav my-2 my-lg-0" v-if="team">
+          <li class="nav-link">{{team.nome}} - {{team.totpoints}} pts </li>
+          <li class="nav-link"> <a href="#" v-on:click="logout">logout</a></li>
+          <li class="nav-link"> <a href="#" v-on:click="fetchData">refresh</a></li>
+        </ul>
       </div> 
     </nav>
 
@@ -181,14 +183,19 @@
 </script>
 
 <style>
+
+  @import url("https://fonts.googleapis.com/css?family=Source+Code+Pro|Source+Sans+Pro:300,400,900");
+
   #app {
-    font-family: 'Avenir', Helvetica, Arial, sans-serif;
+    font-family: "Source Sans Pro", Arial, Helvetica, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    color: #2c3e50;
-    
+    color: #eaeaea;
   }
 
+  body {
+        background: #151515 url("assets/bkg.png") 0 0;
+  }
   .container {
     margin-top: 60px;
     margin-bottom: 60px;
@@ -206,9 +213,33 @@
     transition: opacity .2s ease;;
   }
 
-  .slide-fade-enter, .slide-fade-leave-to {
+  .slide-fade-enter,
+  .slide-fade-leave-to {
     opacity: 0;
   }
 
-  
+  .logo-draw {
+    font-weight: 900;
+    color: #9abbff;
+  }
+
+  .logo-poli {
+	font-weight: 400;
+	color: #ffffff;
+}
+
+.logo-ctf {
+    font-weight: 400;
+    color: #9abbff;
+}
+
+.navbar-brand {
+  font-size: 1.7em;
+}
+
+a {
+  color: #9abbff;
+}
+
+
 </style>

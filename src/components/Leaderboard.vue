@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Leaderboard <img src="../assets/podiumc.png" width="120px"/></h1>
+    <h1>Leaderboard <img src="../assets/podiumcw.png" width="120px"/></h1>
     <table id="leaderboard" class="table">
         <thead>
             <tr>

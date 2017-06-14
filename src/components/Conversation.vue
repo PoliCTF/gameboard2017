@@ -1,10 +1,12 @@
 <template>
+ 
   <div class="conversation">
+    <h2>Interrogating {{conversation.name}}</h2>
     <transition-group name="list">
     <div v-for="(line,i) of visible_lines" v-bind:key="i">
       <p class="other" v-if="isString(line)">{{line}}</p>
       <div v-else-if="choices[i]">
-        <p class="me text-primary">{{choices[i]}}</p>
+        <p class="my-line">{{choices[i]}}</p>
         <p class="other">{{ line[choices[i]] }}</p>
       </div>
       <div v-else>
@@ -21,6 +23,7 @@
 
 let conversation = {
   avatar : "img",
+  name: "Roberto",
   lines: [ 
     "Hi I'm Remmy Mc.Nee, I have a job for you. Do you like squirrels, right?",
     {
@@ -79,4 +82,26 @@ export default {
   opacity: 0;
   transform: translateY(30px);
 }
+.list-move {
+  transition: transform 1s;
+}
+.conversation h2 {
+  margin-bottom: 1em;
+}
+
+.btn.btn-outline-primary:hover {
+  background-color: #9abbff;
+  border-color: #9abbff;
+}
+
+.btn.btn-outline-primary {
+  background-color: transparent;
+  border-color: #9abbff;
+  margin-right: 0.5em;
+}
+
+.my-line {
+  color: #9abbff;
+}
+
 </style>

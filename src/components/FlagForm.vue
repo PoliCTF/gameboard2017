@@ -3,7 +3,7 @@
         <div class="input-group">
             <input class="form-control" name="flag" v-model="flag" type="text" placeholder="Flag">
             <span class="input-group-btn">  
-                <input type="submit" class="btn  btn-secondary" value="Submit"></input>  
+                <input type="submit" class="btn btn-secondary flag-submit-button" value="Submit"></input>  
             </span>
         </div>
     </form>
@@ -31,4 +31,7 @@ export default {
 
 
 <style scoped>
+.flag-submit-button {
+    background-color: #eaeaea;
+}
 </style>
