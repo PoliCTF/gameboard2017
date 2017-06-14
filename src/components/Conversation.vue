@@ -21,8 +21,7 @@
 
 <script>
 
-let conversation = {
-  avatar : "img",
+let defaultConversation = {
   name: "Roberto",
   lines: [ 
     "Hi I'm Remmy Mc.Nee, I have a job for you. Do you like squirrels, right?",
@@ -44,8 +43,14 @@ import Api from '@/api'
 
 export default {
   name: "Conversation",
+  props: {
+    conversation: {
+      type: Object,
+      required: true,
+      default: () => defaultConversation
+    }
+  },
   data: () => { return {
-    conversation: conversation, //TODO make prop
     choices: [null, null, null, null, null, null, null, null]
   }},
   computed: {

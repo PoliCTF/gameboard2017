@@ -47,11 +47,18 @@ export default {
   getChallenge (id) {
     return axios
       .get('/common/challenge/' + id)
-      .then(data => {
-        if (data.data.html === 'Error') {
+      .then(response => {
+        if (response.data.html === 'Error') {
           throw new Error('not_found')
         }
-        return data.data
+        
+        try {
+          response.data.conversation = JSON.parse(response.data.metadata)
+        } catch (e) {
+          console.error(e)
+        }
+
+        return response.data
       })
   },
 

@@ -15,7 +15,7 @@
           </div>
           <div class="col-6 interrogations">
             <div v-if="interrogating">
-              <Conversation></Conversation> 
+              <Conversation :conversation="challenge.conversation"></Conversation> 
             </div>
             <div v-else>
               <h2>Interrogations!</h2>
@@ -80,7 +80,13 @@ export default {
 
           // horrible horrible hack. We take the number of solves and points 
           // from commonstatus
+          
+          if(this.challenges.length == 0){
+            console.error("this.challenges not loaded");
+          }
+
           let challdata = this.challenges.find(x => x.idchallenge == id)
+
           this.challenge = challenge
           this.challenge.numsolved = challdata.numsolved
           this.challenge.points = challdata.points

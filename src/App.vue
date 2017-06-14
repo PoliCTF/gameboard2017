@@ -9,16 +9,19 @@
       <div class="collapse navbar-collapse" id="mainNavbar">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item">
-            <router-link to="/" class="nav-link">Challenges</router-link>
+            <router-link to="/" class="nav-link" exact>Challenges</router-link>
           </li>
           <li class="nav-item">
             <router-link to="/leaderboard" class="nav-link">Leaderboard</router-link>
           </li>
+          <li class="nav-item">
+            <router-link to="/about" class="nav-link">About</router-link>
+          </li>
         </ul>
         <ul class="navbar-nav my-2 my-lg-0" v-if="team">
           <li class="nav-link">{{team.nome}} - {{team.totpoints}} pts </li>
-          <li class="nav-link"> <a href="#" v-on:click="logout">logout</a></li>
-          <li class="nav-link"> <a href="#" v-on:click="fetchData">refresh</a></li>
+          <li class="nav-link"> <a href="#" v-on:click.prevent="logout">logout</a></li>
+          <li class="nav-link"> <a href="#" v-on:click.prevent="fetchData">refresh</a></li>
         </ul>
       </div> 
     </nav>
@@ -40,6 +43,7 @@
           <div v-if="logged_in">
             <transition name="slide-fade" mode="out-in">
               <router-view 
+                v-if="challenges.length > 0 && leaderboard"
                 :challenges="challenges"
                 :leaderboard="leaderboard"
                 :team="team"
@@ -241,5 +245,12 @@ a {
   color: #9abbff;
 }
 
+#mainNavbar a {
+  outline:none;
+}
+
+#mainNavbar .router-link-active {
+  color: rgba(255, 255, 255, 0.75);
+}
 
 </style>

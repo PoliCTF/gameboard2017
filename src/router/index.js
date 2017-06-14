@@ -4,6 +4,7 @@ import Router from 'vue-router'
 import Challenge from '@/components/Challenge'
 import Challenges from '@/components/Challenges'
 import Leaderboard from '@/components/Leaderboard'
+import About from '@/components/About'
 
 Vue.use(Router)
 
@@ -24,6 +25,11 @@ export default new Router({
       name: 'Challenge',
       component: Challenge,
       props: (route) => ({ id: parseInt(route.params.id) })
+    },
+    {
+      path: '/about',
+      name: 'About',
+      component: About
     }
   ],
   scrollBehavior (to, from, savedPosition) {
