@@ -1,4 +1,4 @@
-const baseurl = window.location.protocol + '//' + window.location.hostname + ':8089/scoreboard/'
+const baseurl = '/scoreboard/'
 import axios from 'axios'
 import qs from 'qs'
 
