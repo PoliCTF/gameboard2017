@@ -11,23 +11,9 @@
                 <div class="chall-cat row">
                     <div v-for="chall of challs">
                         <router-link :to="{ name: 'Challenge', params: { id: chall.idchallenge }}" class="challenge">
-                          {{ chall.name }} <br> {{chall.points}} pts
-                        </router-link>
-                    </div>
-                    <div v-for="chall of challs">
-                        <router-link :to="{ name: 'Challenge', params: { id: chall.idchallenge }}" class="challenge">
-                          {{ chall.name }} <br> {{chall.points}} pts
-                        </router-link>
-                    </div>
-                    <div v-for="chall of challs">
-                        <router-link :to="{ name: 'Challenge', params: { id: chall.idchallenge }}" class="challenge">
-                          {{ chall.name }} <br> {{chall.points}} pts
-                        </router-link>
-                    </div>
-                    <div v-for="chall of challs">
-                        <router-link :to="{ name: 'Challenge', params: { id: chall.idchallenge }}" class="challenge">
-                          {{ chall.name }} <br> {{chall.points}} pts
-                        </router-link>
+                          {{ chall.name }} <br> {{chall.points}} pts 
+                          <span v-if="chall.solved" class="chall_solved_indicator">Solved!</span>
+                        </router-link> 
                     </div>
                 </div>
             </div>
@@ -112,6 +98,9 @@ export default {
 .chall-list, .warnings {
   margin-top: 2em;
 }
+.chall-list:not(first){
+  margin-top: 0.5em;
+}
 .chall-list h2 {
   text-transform: capitalize;
 }
@@ -122,5 +111,13 @@ export default {
   width: 12em;
   margin-right: 0.2em;
   margin-bottom: 0.3em;
+}
+a.challenge:hover{
+  background-color: rgba(255,255,255,0.1);
+  color:#9abbff;
+  text-decoration:none;
+}
+.chall_solved_indicator, .chall_solved_indicator:hover {
+  color:#eaeaea;
 }
 </style>

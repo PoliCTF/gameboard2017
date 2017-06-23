@@ -127,6 +127,10 @@
             this.challenges = commonState.challenges
             this.warnings = commonState.warnings
             this.leaderboard = commonState.leaderboard
+            
+            for (let chall of this.challenges){
+              chall.solved = !!this.team.solved.find(x=> x.id == chall.idchallenge)
+            }
           })
           .catch((e) => this.handleErrors(e))
           .then(() => this.lastUpdate = new Date())
@@ -228,29 +232,29 @@
   }
 
   .logo-poli {
-	font-weight: 400;
-	color: #ffffff;
-}
+    font-weight: 400;
+    color: #ffffff;
+  }
 
-.logo-ctf {
+  .logo-ctf {
     font-weight: 400;
     color: #9abbff;
-}
+  }
 
-.navbar-brand {
-  font-size: 1.7em;
-}
+  .navbar-brand {
+    font-size: 1.7em;
+  }
 
-a {
-  color: #9abbff;
-}
+  a {
+    color: #9abbff;
+  }
 
-#mainNavbar a {
-  outline:none;
-}
+  #mainNavbar a {
+    outline:none;
+  }
 
-#mainNavbar .router-link-active {
-  color: rgba(255, 255, 255, 0.75);
-}
+  #mainNavbar .router-link-active {
+    color: rgba(255, 255, 255, 0.75);
+  }
 
 </style>

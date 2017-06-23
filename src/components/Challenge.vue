@@ -7,7 +7,8 @@
     <div v-if="challenge">
       <h1>{{challenge.name}}</h1>
       <h3 class="subheader">{{challenge.category}} - {{challenge.points}}pts - {{solves}}</h3>
-      <div class="contain">
+      <h3 class="subheader" v-if="challenge.solved">Solved!</h3>
+      <div class="container">
         <div class="row">
           <div class="chall-desc col-6" >
             <h2>Case Notes <img src="../assets/notescw.png" width="90px" /></h2>
@@ -90,6 +91,8 @@ export default {
           this.challenge = challenge
           this.challenge.numsolved = challdata.numsolved
           this.challenge.points = challdata.points
+          this.challenge.solved = challdata.solved
+
         })
         .catch(e => {
           console.log(e)

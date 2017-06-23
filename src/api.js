@@ -40,6 +40,8 @@ export default {
         throw new Error('login')
       }
 
+      teamstatus.data.statosquadra.solved = teamstatus.data.solved
+
       return teamstatus.data.statosquadra
     })
   },
