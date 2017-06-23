@@ -2,6 +2,9 @@
 
 > gameboard for polictf2017
 
+it is possible to override the api server url by setting it in the first script
+tag of `index.html` (see the comment). It defaults to /scoreboard.
+
 ## Build Setup
 
 ``` bash

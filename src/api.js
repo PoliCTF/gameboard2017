@@ -1,4 +1,4 @@
-const baseurl = '/scoreboard/'
+const baseurl = window.baseurl || '/scoreboard/'
 import axios from 'axios'
 import qs from 'qs'
 
