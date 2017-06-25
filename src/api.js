@@ -1,8 +1,17 @@
-const baseurl = window.baseurl || '/scoreboard/'
+const baseurl = window.baseurl || '/api/'
 import axios from 'axios'
 import qs from 'qs'
 
 axios.defaults.baseURL = baseurl
+
+/* Let's define a specific exception type for login errors -> when those are thrown, log out the user */
+function LoginError(message) {
+  this.name = 'LoginError';
+  this.message = message || null;
+  this.stack = (new Error()).stack;
+}
+LoginError.prototype = Object.create(Error.prototype);
+LoginError.prototype.constructor = LoginError;
 
 
 export default {
@@ -37,7 +46,7 @@ export default {
   getTeamState () {
     return axios.get('/team/status', {withCredentials: true}).then(function (teamstatus) {
       if (teamstatus.data.status === 'Plz login.') {
-        throw new Error('login')
+        throw new LoginError('Please login.');
       }
 
       teamstatus.data.statosquadra.solved = teamstatus.data.solved
@@ -53,7 +62,7 @@ export default {
         if (response.data.html === 'Error') {
           throw new Error('not_found')
         }
-        
+
         try {
           response.data.conversation = JSON.parse(response.data.metadata)
         } catch (e) {
@@ -87,7 +96,7 @@ export default {
       .post('/login', logindata, {withCredentials: true})
       .then(function (result) {
         if (result.data.r !== 1) {
-          throw new Error('credentials')
+          throw new LoginError(result.data.reason);
         }
         return true
       })
@@ -98,7 +107,7 @@ export default {
       .post('/logout', {}, {withCredentials: true})
       .then(function (result) {
         if (result.data.status === 'Plz login.') {
-          throw new Error('login')
+          throw new LoginError('Logout successful.');
         }
         if (result.data.r !== 1) {
           throw new Error('logout_failed')

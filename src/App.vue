@@ -17,6 +17,9 @@
           <li class="nav-item">
             <router-link to="/about" class="nav-link">About</router-link>
           </li>
+          <li class="nav-item" id="registration-link">
+            <a href="https://registration.polictf.it" class="nav-link">Register</a>
+          </li>
         </ul>
         <ul class="navbar-nav my-2 my-lg-0" v-if="team">
           <li class="nav-link">{{team.nome}} - {{team.totpoints}} pts </li>
@@ -95,10 +98,12 @@
         if(logged_in){
           window.localStorage.setItem('loggedin', true)
           this.fetchData();
+          $('#registration-link').hide();
         } else {
           this.team = null
           this.error = null
           window.localStorage.removeItem('loggedin')
+          $('#registration-link').show();
         }
       }
     },
@@ -137,14 +142,10 @@
       },
 
       handleErrors(e){
-        if(e.message === 'login'){
+        if(e.name === 'LoginError') {
           this.logged_in = false
           this.message = null
-          this.error = "Please login again"
-        } else if (e.message === 'credentials'){
-          this.logged_in = false
-          this.message = null
-          this.error = "Login failed, please check your credentials"
+          this.error = e.message || "Please login."
         } else {
           this.error = e.message
         }
