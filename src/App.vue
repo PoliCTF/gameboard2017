@@ -18,7 +18,7 @@
             <router-link to="/about" class="nav-link">About</router-link>
           </li>
           <li class="nav-item" id="registration-link">
-            <a href="https://registration.polictf.it" class="nav-link">Register</a>
+            <a href="https://register.polictf.it" class="nav-link">Register</a>
           </li>
         </ul>
         <ul class="navbar-nav my-2 my-lg-0" v-if="team">

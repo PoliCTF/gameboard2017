@@ -32,11 +32,13 @@ export default {
         }
       })
 
-      state.challenges = status.data.status.map(challenge => {
-        let details = challenges.data[challenge.idchallenge]
-        challenge.name = details.name
-        challenge.cat = details.cat
-        return challenge
+      state.challenges = status.data.status.filter(c => {
+        return c.status == "open";
+      }).map(challenge => {
+        let details = challenges.data[challenge.idchallenge];
+        challenge.name = details.name;
+        challenge.cat = details.cat;
+        return challenge;
       })
 
       return state

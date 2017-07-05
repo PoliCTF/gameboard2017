@@ -6,7 +6,7 @@
         <label for="password">Password <input class="form-control" name="password" v-model="password" type="password"></label><br/>
         <input value="Login" type="submit" class="btn btn-primary"></input>
     </form>
-    <p>Forgotten password? <a href="https://registration.polictf.it/reset" target="_blank">Reset it here!</a></p>
+    <p>Forgotten password? <a href="https://register.polictf.it/reset" target="_blank">Reset it here!</a></p>
   </div>
 </template>
 
