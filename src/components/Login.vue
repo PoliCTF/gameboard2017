@@ -11,6 +11,7 @@
 </template>
 
 <script>
+import Shared from '@/Shared'
 
 export default {
   name: 'Login',
@@ -22,7 +23,8 @@ export default {
   },
   methods: {
     onSubmit() {
-        this.$emit("submit", this.username, this.password);
+        this.$emit("submit", this.username, this.password)
+        Shared.events.$emit("submitlogin", this.username, this.password)
     }
   }
 }

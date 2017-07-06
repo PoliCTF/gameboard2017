@@ -5,14 +5,13 @@ import qs from 'qs'
 axios.defaults.baseURL = baseurl
 
 /* Let's define a specific exception type for login errors -> when those are thrown, log out the user */
-function LoginError(message) {
-  this.name = 'LoginError';
-  this.message = message || null;
-  this.stack = (new Error()).stack;
+function LoginError (message) {
+  this.name = 'LoginError'
+  this.message = message || null
+  this.stack = (new Error()).stack
 }
-LoginError.prototype = Object.create(Error.prototype);
-LoginError.prototype.constructor = LoginError;
-
+LoginError.prototype = Object.create(Error.prototype)
+LoginError.prototype.constructor = LoginError
 
 export default {
   getCommonState () {
@@ -34,12 +33,12 @@ export default {
       })
 
       state.challenges = status.data.status.filter(c => {
-        return c.status == "open" && challenges.data[c.idchallenge];
+        return c.status === 'open' && challenges.data[c.idchallenge]
       }).map(challenge => {
-        let details = challenges.data[challenge.idchallenge];
-        challenge.name = details.name;
-        challenge.cat = details.cat;
-        return challenge;
+        let details = challenges.data[challenge.idchallenge]
+        challenge.name = details.name
+        challenge.cat = details.cat
+        return challenge
       })
 
       return state
@@ -49,20 +48,20 @@ export default {
   getTeamState () {
     return axios.get('/team/status', {withCredentials: true}).then(function (teamstatus) {
       if (teamstatus.data.status === 'Plz login.') {
-        throw new LoginError('Please login.');
+        throw new LoginError('Please login.')
       }
 
-      teamstatus.data.statosquadra.solved = teamstatus.data.solved  || [];
+      teamstatus.data.statosquadra.solved = teamstatus.data.solved || []
 
-      teamstatus.data.statosquadra.warnings = (teamstatus.data.teamwarnings || []).map(function(warning) {
-          return {
-              message : warning.message,
-              time : new Date(warning.unixtime * 1000),
-              type: 'team'
-          }
-      }) || [];
+      teamstatus.data.statosquadra.warnings = (teamstatus.data.teamwarnings || []).map(function (warning) {
+        return {
+          message: warning.message,
+          time: new Date(warning.unixtime * 1000),
+          type: 'team'
+        }
+      }) || []
 
-      return teamstatus.data.statosquadra;
+      return teamstatus.data.statosquadra
     })
   },
 

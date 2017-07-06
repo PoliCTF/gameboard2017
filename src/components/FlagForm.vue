@@ -10,11 +10,11 @@
 </template>
 
 <script>
-import Bus from '@/Bus'
+import Shared from '@/Shared'
 
 export default {
   name: 'FlagForm',
-  data: function(){
+  data(){
       return {
           flag: null
       }
@@ -22,7 +22,7 @@ export default {
   methods: {
     submitFlag(flag){
         this.$emit('submitflag', flag)
-        Bus.$emit('submitflag', flag)
+        Shared.events.$emit('submitflag', flag)
         this.flag = null
     }
   }

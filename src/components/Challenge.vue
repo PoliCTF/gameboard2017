@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container" v-if="challenge">
       <div class="row">
         <div id="challenges-details" class="col-8">
           <transition name="fade">
@@ -45,16 +45,21 @@
       </div>
     </div>
   </div>
+  <div v-else>
+    <spinner size="big" message="Loading..." text-fg-color="#9abbff" line-fg-color="#9abbff"></spinner>
+  </div>
 </template>
 
 <script>
 import Api from '@/api'
 import FlagForm from './FlagForm'
+import Spinner from 'vue-simple-spinner'
 
 export default {
   name: 'Challenge',
   components: {
-    FlagForm
+    FlagForm, 
+    Spinner
   },
   props: {
     id: {

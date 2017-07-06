@@ -17,14 +17,14 @@
           <li class="nav-item">
             <a href="http://www.polictf.it/instructions.html" class="nav-link">Instructions</a>
           </li>
-          <li class="nav-item" id="registration-link">
+          <li class="nav-item" id="registration-link" v-if="!logged_in">
             <a href="https://register.polictf.it" class="nav-link">Register</a>
           </li>
         </ul>
         <ul class="navbar-nav my-2 my-lg-0" v-if="team">
           <li class="nav-link">{{team.nome}} - {{team.totpoints}} pts </li>
           <li class="nav-link"> <a href="#" v-on:click.prevent="logout">logout</a></li>
-          <li class="nav-link"> <a href="#" v-on:click.prevent="fetchData">refresh</a></li>
+          <li class="nav-link"> <a href="#" v-on:click.prevent="fetchData" data-toggle="tooltip" data-placement="bottom" title="last refreshed" >refresh</a></li>
         </ul>
       </div> 
     </nav>
@@ -43,20 +43,14 @@
           </button>
       </div>
       <section id="main-content">
-          <div v-if="logged_in">
             <transition name="slide-fade" mode="out-in">
-              <router-view 
-                v-if="challenges.length > 0 && leaderboard"
+              <router-view
                 :challenges="challenges"
                 :leaderboard="leaderboard"
                 :team="team"
                 :warnings="warnings"
                 ></router-view>
             </transition>
-          </div>
-          <div v-else>
-            <Login v-on:submit="onLoginSubmitted" />
-          </div>
       </section>
     </div>
 
@@ -87,20 +81,28 @@
 <script>
   import Api from './api'
   import Login from './components/Login'
-  import Bus from '@/Bus'
+  import Shared from '@/Shared'
+  import Spinner from 'vue-simple-spinner'
 
   let App = {
     name: 'app',
 
     components: {
-      Login
+      Login,
+      Spinner
     },
 
     created(){
       if(window.localStorage.getItem('loggedin')){
         this.logged_in = true
       }
-      Bus.$on('submitflag', this.submitFlag)
+      Shared.events.$on('submitflag', this.submitFlag)
+      Shared.events.$on('submitlogin', this.submitLogin)
+    },
+
+    mounted(){
+      console.log($('[data-toggle="tooltip"]'))
+      $('[data-toggle="tooltip"]').tooltip()
     },
 
     watch: {
@@ -108,48 +110,44 @@
         if(logged_in){
           window.localStorage.setItem('loggedin', true)
           this.fetchData();
-          $('#registration-link').hide();
         } else {
           this.team = null
           this.error = null
           window.localStorage.removeItem('loggedin')
-          $('#registration-link').show();
+          this.$router.push('/login')
         }
       }
     },
 
     data: function () {
-      return {
-        logged_in: false,
-        team: null,
-        message: null,
-        error: null,
-        challenges: [],
-        warnings: [],
-        leaderboard: [],
-        lastUpdate: null,
-        flag: null
-      }
+      return Shared.data
     },
 
     methods: {
-      fetchData(){
-        Api.getTeamState()
-          .then(team => this.team = team)
-          .then(() => Api.getCommonState())
-          .then( commonState => {
-            this.challenges = commonState.challenges;
-            this.warnings = commonState.warnings.concat(this.team.warnings).sort(function(x, y) {
-                return x.time - y.time;
-            });
-            this.leaderboard = commonState.leaderboard;
+      async created(){
+        await this.fetchData();
+      },
 
-            for (let chall of this.challenges){
-              chall.solved = !!this.team.solved.find(x=> x.id == chall.idchallenge);
-            }
-          })
-          .then(() => this.lastUpdate = new Date())
-          .catch((e) => this.handleErrors(e))
+      async fetchData(){
+        try{
+          let commonState = await Api.getCommonState()
+          this.challenges = commonState.challenges;
+          this.leaderboard = commonState.leaderboard;
+          this.lastUpdate = new Date()
+
+          if(!this.logged_in){
+            return
+          }
+
+          this.team = await Api.getTeamState();
+          this.warnings = commonState.warnings.concat(this.team.warnings).sort((x, y)=> x.time - y.time);
+        
+          for (let chall of this.challenges){
+            chall.solved = !!this.team.solved.find(x=> x.id == chall.idchallenge);
+          }
+        } catch(e){
+          this.handleErrors(e)
+        }
       },
 
       handleErrors(e){
@@ -163,13 +161,14 @@
         }
       },
 
-      onLoginSubmitted(username, password){
+      submitLogin(username, password){
         Api
           .login(username,password)
           .then(() => {
             this.logged_in = true
             this.message = null
             this.error = null
+            this.$router.push('/')
           })
           .catch(e => this.handleErrors(e))
       },
@@ -269,16 +268,13 @@
     color: #9abbff;
   }
 
-  #mainNavbar a {
-    outline:none;
+  #mainNavbar a:hover, #mainNavbar a:focus {
+    color: #9abbff;
+    outline: none;
   }
 
   #mainNavbar .router-link-active {
     color: rgba(255, 255, 255, 0.75);
-  }
-
-  #mainNavbar a:hover {
-    text-decoration: none; 
   }
 
   ul.nav li:before {

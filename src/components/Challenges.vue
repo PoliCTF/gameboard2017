@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    
+    <div v-if="shared.lastUpdate">
       <div class="row">
         <div id="challenges" class="col-8">
           <h1 style="text-align: center;">My Cases <img src="../assets/investigationcw.png" width="90px"> </h1>
@@ -42,20 +42,26 @@
         </div>
       </div>
     </div>
+    </div>
+    <div v-else>
+      <spinner size="big" message="Loading..." text-fg-color="#9abbff" line-fg-color="#9abbff"></spinner>
+    </div>
   </div>
 </template>
 
 <script>
 import FlagForm from './FlagForm'
+import Spinner from 'vue-simple-spinner'
+import Shared from '@/Shared'
 
 export default {
   name: 'Challenges',
   components: {
-    FlagForm
+    FlagForm, Spinner
   },
   data: function(){
     return {
-      flag: null
+      shared: Shared.data
     }
   },
   props: {
