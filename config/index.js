@@ -29,10 +29,16 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/api': {
-        target: 'https://scoreboard.polictf.it/',
+        target: process.env['APISERVER'] || 'https://scoreboard.polictf.it/',
         secure: true,
         changeOrigin: true,
-        cookieDomainRewrite: "localhost:8080"
+        cookieDomainRewrite: "localhost",
+        onProxyRes: function stripSecureCookie(proxyRes, req, res) {
+            let setCookies = proxyRes.headers['set-cookie']
+            if(setCookies){
+              proxyRes.headers['set-cookie'] = setCookies.map(c => c.replace('Secure;', ''))
+            }
+        }
       }
     },
     // CSS Sourcemaps off by default because relative paths are "buggy"

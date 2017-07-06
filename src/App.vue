@@ -136,7 +136,6 @@
       fetchData(){
         Api.getTeamState()
           .then(team => this.team = team)
-          .catch(e => this.handleErrors(e))
           .then(() => Api.getCommonState())
           .then( commonState => {
             this.challenges = commonState.challenges;
@@ -149,8 +148,8 @@
               chall.solved = !!this.team.solved.find(x=> x.id == chall.idchallenge);
             }
           })
-          .catch((e) => this.handleErrors(e))
           .then(() => this.lastUpdate = new Date())
+          .catch((e) => this.handleErrors(e))
       },
 
       handleErrors(e){
