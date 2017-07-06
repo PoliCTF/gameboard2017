@@ -102,6 +102,7 @@
       Shared.events.$on('submitflag', this.submitFlag)
       Shared.events.$on('submitlogin', this.submitLogin)
       this.fetchData();
+      setInterval(()=>this.fetchData(), 5*60*1000)
     },
 
     watch: {
