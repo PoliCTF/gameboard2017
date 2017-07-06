@@ -54,7 +54,7 @@ export default {
 
       teamstatus.data.statosquadra.solved = teamstatus.data.solved  || [];
 
-      teamstatus.data.statosquadra.warnings = teamstatus.data.teamwarnings.map(function(warning) {
+      teamstatus.data.statosquadra.warnings = (teamstatus.data.teamwarnings || []).map(function(warning) {
           return {
               message : warning.message,
               time : new Date(warning.unixtime * 1000),
