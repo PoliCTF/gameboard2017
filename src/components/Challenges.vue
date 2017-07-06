@@ -2,17 +2,17 @@
   <div class="container">
     
       <div class="row">
-        <div id="challenges" class="col-7">
-          <h2>My Cases <img src="../assets/investigationcw.png" width="90px"> </h2>
+        <div id="challenges" class="col-8">
+          <h1 style="text-align: center;">My Cases <img src="../assets/investigationcw.png" width="90px"> </h1>
               <div v-for="(challs,cat) in challengeList" class="chall-list container">
                 <div class="row">
                   <h2>{{cat}}</h2>
                 </div>
                 <div class="chall-cat row">
                     <div v-for="chall of challs">
-                        <router-link :to="{ name: 'Challenge', params: { id: chall.idchallenge }}" class="challenge">
-                          {{ chall.name }} <br> {{chall.points}} pts 
-                          <span v-if="chall.solved" class="chall_solved_indicator">Solved!</span>
+                        <router-link :to="{ name: 'Challenge', params: { id: chall.idchallenge }}" class="challenge" v-bind:class="{ solved : chall.solved, firstblood: chall.numsolved == 0 }">
+                          {{ chall.name }} ({{chall.points}})
+                          <span v-if="chall.solved" class="badge">solved</span>
                         </router-link> 
                     </div>
                 </div>
@@ -117,6 +117,16 @@ a.challenge:hover{
   color:#9abbff;
   text-decoration:none;
 }
+
+.firstblood {
+    border: 1px solid #9abbff;
+}
+
+.solved {
+    background-color: rgba(255,255,255,0.03);
+    color: #eaeaea;
+}
+
 .chall_solved_indicator, .chall_solved_indicator:hover {
   color:#eaeaea;
 }

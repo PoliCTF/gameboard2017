@@ -28,12 +28,13 @@ export default {
       state.warnings = status.data.globalwarnings.map(function (warning) {
         return {
           message: warning.message,
-          time: new Date(warning.unixtime * 1000)
+          time: new Date(warning.unixtime * 1000),
+          type: 'global'
         }
       })
 
       state.challenges = status.data.status.filter(c => {
-        return c.status == "open";
+        return c.status == "open" && challenges.data[c.idchallenge];
       }).map(challenge => {
         let details = challenges.data[challenge.idchallenge];
         challenge.name = details.name;
@@ -51,9 +52,17 @@ export default {
         throw new LoginError('Please login.');
       }
 
-      teamstatus.data.statosquadra.solved = teamstatus.data.solved
+      teamstatus.data.statosquadra.solved = teamstatus.data.solved  || [];
 
-      return teamstatus.data.statosquadra
+      teamstatus.data.statosquadra.warnings = teamstatus.data.teamwarnings.map(function(warning) {
+          return {
+              message : warning.message,
+              time : new Date(warning.unixtime * 1000),
+              type: 'team'
+          }
+      }) || [];
+
+      return teamstatus.data.statosquadra;
     })
   },
 
@@ -64,13 +73,6 @@ export default {
         if (response.data.html === 'Error') {
           throw new Error('not_found')
         }
-
-        try {
-          response.data.conversation = JSON.parse(response.data.metadata)
-        } catch (e) {
-          console.error(e)
-        }
-
         return response.data
       })
   },
@@ -79,7 +81,8 @@ export default {
     let errmsgs = {
       'wrong': 'Wrong flag, sorry',
       'rightbutcannotsave': 'Right flag but I can\'t save it right now, try again',
-      'slowdown': 'Rate limiting reached, slow down please'
+      'slowdown': 'Rate limiting reached, slow down please',
+      'alreadysolved': 'Your team already solved this challenge! Go pwn something else!'
     }
     return axios
       .post('/team/submit', qs.stringify({flag: flag}), {withCredentials: true})

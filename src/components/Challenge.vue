@@ -1,45 +1,60 @@
 <template>
-  <div class="challenge-details">
-    <transition name="fade">
-    <div v-if="error" class="error">
-      Error: {{error}}
-    </div>
-    <div v-if="challenge">
-      <h1>{{challenge.name}}</h1>
-      <h3 class="subheader">{{challenge.category}} - {{challenge.points}}pts - {{solves}}</h3>
-      <h3 class="subheader" v-if="challenge.solved">Solved!</h3>
-      <div class="container">
-        <div class="row">
-          <div class="chall-desc col-6" >
-            <h2>Case Notes <img src="../assets/notescw.png" width="90px" /></h2>
-            <div v-html="challenge.html"></div>
-          </div>
-          <div class="col-6 interrogations">
-            <div v-if="interrogating">
-              <Conversation :conversation="challenge.conversation"></Conversation> 
+  <div class="container">
+      <div class="row">
+        <div id="challenges-details" class="col-8">
+          <transition name="fade">
+            <div v-if="error" class="error">
+              Error: {{error}}
             </div>
-            <div v-else>
-              <h2>Interrogations!</h2>
-              <a href="#" v-on:click.prevent="interrogating=true">
-                <img src="../assets/questioningc.png" class="image" />
-              </a>
+          </transition>
+
+          <h1 style="text-align: center;  ">{{challenge.name}}</h1>
+          <h3 class="subheader">{{challenge.category}} &middot; {{challenge.points}}pts &middot; {{solves}}</h3>
+          <h3 class="subheader" v-if="challenge.solved">Solved!</h3>
+
+          <div class="chall-desc" >
+            <h2 style="padding-bottom: 0.3em;">Case Notes <img src="../assets/notescw.png" width="90px" /></h2>
+            <div v-html="challenge.html"></div>
+            <div v-if="challenge.file">
+                <p class="lead">Download the challenge <a :href="challenge.file">here</a>! <br/><small>(SHA 256 checksum: {{challenge.filehash}})</small></p>
             </div>
           </div>
         </div>
+      <div id="sidebar" class="col">
+        <h2>Solve a case!</h2>
+        <FlagForm />
+        <div class="warnings">
+          <h3>Secretary notes</h3>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>Message</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="warning of warnings">
+                <td>{{warning.time.toLocaleString()}}</td>
+                <td>{{warning.message}}</td>
+              </tr>
+            </tbody>
+          </table>
+
+          </ul>
+        </div>
       </div>
-    </div>    
-  </transition>
+    </div>
   </div>
 </template>
 
 <script>
 import Api from '@/api'
-import Conversation from '@/components/Conversation'
+import FlagForm from './FlagForm'
 
 export default {
   name: 'Challenge',
   components: {
-    Conversation
+    FlagForm
   },
   props: {
     id: {
@@ -51,10 +66,14 @@ export default {
       //challenge with the given id.
       type: Array,
       required: true
+    },
+    warnings: {
+      type: Array,
+      default: []
     }
   },
   created(){
-    this.fetchData()
+    this.fetchData();
   },
   data() { return {
     challenge: null,
@@ -81,7 +100,7 @@ export default {
 
           // horrible horrible hack. We take the number of solves and points 
           // from commonstatus
-          
+
           if(this.challenges.length == 0){
             console.error("this.challenges not loaded");
           }

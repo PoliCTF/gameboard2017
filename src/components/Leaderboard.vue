@@ -13,7 +13,7 @@
         <tbody>
             <tr v-for="(team, index)  in leaderboard">
                <td>#{{index +1}}</td>
-               <td>{{team.name}}</td>
+               <td><a :href="team.website ? team.website : null" target="_blank">{{team.name}}</a><span v-if="team.twitter">&nbsp;&nbsp;&nbsp;&nbsp;<small><i class="fa fa-twitter" aria-hidden="true"></i>&nbsp;<a :href="'https://twitter.com/' + team.twitter" target="_blank">{{team.twitter}}</a></small></span></td>
                <td>{{team.country}}</td>
                <td>{{team.points}}</td>
             </tr>

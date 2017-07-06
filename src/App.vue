@@ -15,7 +15,7 @@
             <router-link to="/leaderboard" class="nav-link">Leaderboard</router-link>
           </li>
           <li class="nav-item">
-            <router-link to="/about" class="nav-link">About</router-link>
+            <a href="http://www.polictf.it/instructions.html" class="nav-link">Instructions</a>
           </li>
           <li class="nav-item" id="registration-link">
             <a href="https://register.polictf.it" class="nav-link">Register</a>
@@ -29,7 +29,7 @@
       </div> 
     </nav>
 
-    <div class="container">
+    <div class="container" id="main-content">
       <div v-if="error" class="alert alert-danger" role="alert">
           {{error}}
           <button v-on:click="error = null" type="button" class="close" aria-label="Close">
@@ -61,14 +61,24 @@
     </div>
 
     <footer class="footer">
-      <div class="text-muted">
-        <p>Competition organized by <a href="http://toh.necst.it">Tower of Hanoi</a> and supported by the <a href="http://www.necst.it">NECSTLab</a>.<br/>
-          <i class="fa fa-twitter" aria-hidden="true"></i> <a href="https://twitter.com/towerofhanoi">towerofhanoi</a>&nbsp;&bull;
-          <i class="fa fa-github" aria-hidden="true"></i> <a href="https://github.com/polictf">polictf</a>&nbsp;&bull;
-          <i class="fa fa-envelope" aria-hidden="true"></i> <a href="mailto:info@polictf.it">info@polictf.it</a>&nbsp;&bull;
-          <i class="fa fa-comment" aria-hidden="true"></i> <a href="https://webirc.hackint.org/#polictf">#polictf on hackint</a>
-        </p>
-      </div>
+        <div class="container text-muted">
+            <p>Competition organized by <a href="http://toh.necst.it">Tower of Hanoi</a> and supported by the <a href="http://www.necst.it">NECSTLab</a>.</p>
+            <p>
+            <i class="fa fa-twitter" aria-hidden="true"></i> <a href="https://twitter.com/towerofhanoi">towerofhanoi</a>&nbsp;&bull; 
+            
+            <i class="fa fa-github" aria-hidden="true"></i> <a href="https://github.com/polictf">polictf</a>&nbsp;&bull; 
+            
+            <i class="fa fa-envelope" aria-hidden="true"></i> <a href="mailto:info@polictf.it">info@polictf.it</a>&nbsp;&bull; 
+            
+            <i class="fa fa-comment" aria-hidden="true"></i> <a href="https://webirc.hackint.org/#polictf">#polictf on hackint</a>
+            </p>
+
+            <p>
+            Gameboard icons from <a href="https://thenounproject.com/">Noun Project</a>:
+            "Podium" by ProSymbols,
+            "Fingerprint" by anbileru adaleru.
+            </p>
+        </div>
     </footer>
 
   </div>
@@ -129,12 +139,14 @@
           .catch(e => this.handleErrors(e))
           .then(() => Api.getCommonState())
           .then( commonState => {
-            this.challenges = commonState.challenges
-            this.warnings = commonState.warnings
-            this.leaderboard = commonState.leaderboard
-            
+            this.challenges = commonState.challenges;
+            this.warnings = commonState.warnings.concat(this.team.warnings).sort(function(x, y) {
+                return x.time - y.time;
+            });
+            this.leaderboard = commonState.leaderboard;
+
             for (let chall of this.challenges){
-              chall.solved = !!this.team.solved.find(x=> x.id == chall.idchallenge)
+              chall.solved = !!this.team.solved.find(x=> x.id == chall.idchallenge);
             }
           })
           .catch((e) => this.handleErrors(e))
@@ -148,6 +160,7 @@
           this.error = e.message || "Please login."
         } else {
           this.error = e.message
+          console.error(e);
         }
       },
 
@@ -210,8 +223,15 @@
     margin-bottom: 60px;
   }
 
+  body { /* Margin bottom by footer height */ margin-bottom: 130px; }
+
+  #main-content {
+    font-weight: 300;
+  }
+
   .footer {
     text-align: center;
+    font-size: 0.83em;
   }
 
   #main-content h1 {
@@ -257,5 +277,39 @@
   #mainNavbar .router-link-active {
     color: rgba(255, 255, 255, 0.75);
   }
+
+  #mainNavbar a:hover {
+    text-decoration: none; 
+  }
+
+  ul.nav li:before {
+    content: "";
+    margin: 0;
+  }
+
+  ul.navbar-nav a:hover:before {
+    content: "\\> "; 
+    color: #9abbff;
+  }
+
+  ul.navbar-nav .active a:before {
+    content: "\\> ";
+    color: #9abbff;
+  }
+
+  .navbar-inverse .navbar-nav > .active > a, .navbar-inverse .navbar-nav > .active > a:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+
+  ul.navbar-nav .no-before a:hover:before {
+    content: "";
+  }
+
+  h1:before {
+    content: "\\>"; /* color: #888; */ color: #9abbff; padding-right: 10px;
+  }
+
+  h1, h2, h3, h4, h5, h6 { font-weight: normal; font-family: "Source Sans Pro", Arial, Helvetica, sans-serif; color: #9abbff; letter-spacing: -0.03em; text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1), 0 0 5px rgba(181, 232, 83, 0.1), 0 0 10px rgba(181, 232, 83, 0.1); }
+
 
 </style>
