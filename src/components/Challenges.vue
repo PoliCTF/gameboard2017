@@ -117,6 +117,7 @@ export default {
   width: 12em;
   margin-right: 0.2em;
   margin-bottom: 0.3em;
+  height: 6.5em;
 }
 a.challenge:hover{
   background-color: rgba(255,255,255,0.1);

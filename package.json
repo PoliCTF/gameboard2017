@@ -20,7 +20,8 @@
     "qs": "^6.4.0",
     "vue": "^2.2.6",
     "vue-router": "^2.3.1",
-    "vue-simple-spinner": "^1.2.1"
+    "vue-simple-spinner": "^1.2.1",
+    "vue-top-progress": "^0.5.0"
   },
   "devDependencies": {
     "autoprefixer": "^6.7.2",

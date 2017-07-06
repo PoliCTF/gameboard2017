@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <top-progress ref="topProgress"></top-progress>
     <nav class="navbar navbar-toggleable-md navbar-inverse bg-inverse" >
       <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -23,8 +24,8 @@
         </ul>
         <ul class="navbar-nav my-2 my-lg-0" v-if="team">
           <li class="nav-link">{{team.nome}} - {{team.totpoints}} pts </li>
+          <li class="nav-link"> <RefreshButton @refresh="fetchData" :refreshing="refreshing" :lastUpdate="lastUpdate"></RefreshButton></li>
           <li class="nav-link"> <a href="#" v-on:click.prevent="logout">logout</a></li>
-          <li class="nav-link"> <a href="#" v-on:click.prevent="fetchData" data-toggle="tooltip" data-placement="bottom" title="last refreshed" >refresh</a></li>
         </ul>
       </div> 
     </nav>
@@ -80,40 +81,36 @@
 
 <script>
   import Api from './api'
-  import Login from './components/Login'
+  import RefreshButton from '@/components/RefreshButton'
   import Shared from '@/Shared'
   import Spinner from 'vue-simple-spinner'
+  import topProgress from 'vue-top-progress'
 
   let App = {
     name: 'app',
 
     components: {
-      Login,
-      Spinner
+      RefreshButton,
+      Spinner,
+      topProgress
     },
 
-    created(){
+    mounted(){
       if(window.localStorage.getItem('loggedin')){
         this.logged_in = true
       }
       Shared.events.$on('submitflag', this.submitFlag)
       Shared.events.$on('submitlogin', this.submitLogin)
-    },
-
-    mounted(){
-      console.log($('[data-toggle="tooltip"]'))
-      $('[data-toggle="tooltip"]').tooltip()
+      this.fetchData();
     },
 
     watch: {
       logged_in: function(logged_in){
         if(logged_in){
-          window.localStorage.setItem('loggedin', true)
           this.fetchData();
         } else {
           this.team = null
           this.error = null
-          window.localStorage.removeItem('loggedin')
           this.$router.push('/login')
         }
       }
@@ -124,30 +121,31 @@
     },
 
     methods: {
-      async created(){
-        await this.fetchData();
-      },
 
       async fetchData(){
+        this.refreshing = true
+        this.$refs.topProgress.start()
+        
         try{
           let commonState = await Api.getCommonState()
           this.challenges = commonState.challenges;
           this.leaderboard = commonState.leaderboard;
           this.lastUpdate = new Date()
 
-          if(!this.logged_in){
-            return
-          }
-
-          this.team = await Api.getTeamState();
-          this.warnings = commonState.warnings.concat(this.team.warnings).sort((x, y)=> x.time - y.time);
-        
-          for (let chall of this.challenges){
-            chall.solved = !!this.team.solved.find(x=> x.id == chall.idchallenge);
+          if(this.logged_in){
+            this.team = await Api.getTeamState();
+            this.warnings = commonState.warnings.concat(this.team.warnings).sort((x, y)=> x.time - y.time);
+          
+            for (let chall of this.challenges){
+              chall.solved = !!this.team.solved.find(x=> x.id == chall.idchallenge);
+            }
           }
         } catch(e){
           this.handleErrors(e)
         }
+
+        this.$refs.topProgress.done()
+        this.refreshing = false
       },
 
       handleErrors(e){
@@ -162,15 +160,18 @@
       },
 
       submitLogin(username, password){
+        this.$refs.topProgress.start()
         Api
           .login(username,password)
           .then(() => {
             this.logged_in = true
             this.message = null
             this.error = null
+            window.localStorage.setItem('loggedin', 'true')
             this.$router.push('/')
           })
           .catch(e => this.handleErrors(e))
+          .then(()=> this.$refs.topProgress.done())
       },
 
       submitFlag(flag){
@@ -186,13 +187,10 @@
       },
 
       logout(){
-        Api
-          .logout()
-          .then(() => {
-            this.logged_in = false
-            this.message = "Logged out"
-          })
-          .catch(e => this.handleErrors(e))
+        this.logged_in = false
+        this.message = "Logged out"
+        window.localStorage.removeItem('loggedin')
+        Api.logout().catch(e => this.handleErrors(e))
       }
     }
 

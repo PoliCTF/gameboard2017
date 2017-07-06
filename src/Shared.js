@@ -9,7 +9,8 @@ export default {
     warnings: [],
     leaderboard: [],
     lastUpdate: null,
-    flag: null
+    flag: null,
+    refreshing: false
   },
   events: new Vue()
 }

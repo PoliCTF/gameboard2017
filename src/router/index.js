@@ -9,7 +9,7 @@ import Login from '@/components/Login'
 Vue.use(Router)
 
 function checkLoggedIn (to, from, next) {
-  if (Shared.data.logged_in) {
+  if (Shared.data.logged_in || window.localStorage.getItem('loggedin')) {
     return next()
   } else {
     return next('/login')
