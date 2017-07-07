@@ -135,7 +135,7 @@
 
           if(this.logged_in){
             this.team = await Api.getTeamState();
-            this.warnings = commonState.warnings.concat(this.team.warnings).sort((x, y)=> x.time - y.time);
+            this.warnings = commonState.warnings.concat(this.team.warnings).sort((x, y)=> y.time - x.time);
           
             for (let chall of this.challenges){
               chall.solved = !!this.team.solved.find(x=> x.id == chall.idchallenge);
