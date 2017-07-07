@@ -1,5 +1,5 @@
 <template>
-  <div class="container" v-if="challenge">
+  <div class="container" v-if="challenge && challenges.length > 0">
       <div class="row">
         <div id="challenges-details" class="col-8">
           <transition name="fade">
@@ -88,6 +88,9 @@ export default {
   watch: {
     id: function(){
       this.fetchData()
+    },
+    challenges: function(){
+      this.fetchData()
     }
   },
   computed: {
@@ -107,13 +110,14 @@ export default {
           // from commonstatus
 
           if(this.challenges.length == 0){
-            console.error("this.challenges not loaded");
+            console.log("this.challenges not loaded. Trying later");
+            return;
           }
 
           let challdata = this.challenges.find(x => x.idchallenge == id)
 
           this.challenge = challenge
-          this.challenge.numsolved = challdata.numsolved
+          this.challenge.numsolved = challdata.numsolved || 0
           this.challenge.points = challdata.points
           this.challenge.solved = challdata.solved
 
